@@ -9,6 +9,14 @@ services:
       - '8000:8000'
     env_file:
       - .env
+    depends_on:
+      - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.django.rule=Host(`weasyprint-django-backend-xymmxy-eb9ae5-83-228-210-135.traefik.me`)"
+      - "traefik.http.routers.django.entrypoints=websecure"
+      - "traefik.http.routers.django.tls.certresolver=myresolver"
+      - "traefik.http.services.django.loadbalancer.server.port=8000"
 
 
   database:
@@ -23,3 +31,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_PORT=5432
       - POSTGRES_HOST=db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
