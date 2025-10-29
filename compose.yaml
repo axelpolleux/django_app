@@ -1,0 +1,25 @@
+services:
+  django:
+    build: ./app
+    container_name: django-web-backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - /app
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+
+
+  database:
+    container_name: postgresql-database
+    image: postgres:17
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_NAME=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=db
